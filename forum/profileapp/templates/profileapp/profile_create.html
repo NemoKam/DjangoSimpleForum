@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block css %}
+    <link href="{% static 'profileapp/profile_create.css' %}" rel="stylesheet"/>
+{% endblock %}
+
+{% block content %}
+    <div class="auth-main">
+        {% if user.is_authenticated %}
+        <form action="{% url 'profileapp:profile_create' %}" method="post" enctype="multipart/form-data" class="uk-grid" uk-grid>
+            {% csrf_token %}
+            <div class="uk-width-1-1">
+                {{ profile_reg_form.birthday }}
+            </div>
+            <div class="uk-width-1-1">
+                {{ profile_reg_form.gender }}
+            </div>
+            <div class="uk-width-1-1 profile_reg_select_inp" uk-form-custom>
+                {{ profile_reg_form.avatar }}
+                <button class="uk-button uk-button-default" type="button" tabindex="-1">Select</button>
+            </div>
+            <div class="uk-width-1-1">
+                {{ profile_reg_form.about }}
+            </div>
+            <div class="uk-width-1-1 profile_reg_submit_inp">
+                <button class="uk-button uk-button-default">Submit</button>
+            </div>
+        </form>
+        {% endif%}
+    </div>
+{% endblock %}
+
+{% block js %}
+    <script src="{% static 'profileapp/profile_create.js' %}"></script>
+{% endblock %}

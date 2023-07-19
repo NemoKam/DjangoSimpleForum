@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block css %}
+    <link href="{% static 'authapp/login.css' %}" rel="stylesheet"/>
+{% endblock %}
+
+{% block content %}
+    <div class="auth-main">
+        {% if user.is_authenticated %}
+            logout
+        {% else %}
+        <form action="{% url 'authapp:login' %}" method="post" enctype="multipart/form-data" class="login_form" uk-grid>
+            {% csrf_token %}
+            <div class="uk-width-1-2@s">
+                {{ login_form.username }}
+            </div>    
+            <div class="uk-width-1-2@s">
+                {{ login_form.password }}
+            </div>
+            <div class="uk-width-1-1@s log_submit_inp">
+                <button class="uk-button uk-button-default">Submit</button>
+            </div>
+        </form>
+        {% endif%}
+    </div>
+{% endblock %}
+
+{% block js %}
+    <script src="{% static 'authapp/login.js' %}"></script>
+{% endblock %}

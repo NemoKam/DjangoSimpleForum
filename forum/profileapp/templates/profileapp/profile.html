@@ -1,0 +1,150 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block css %}
+    <link href="{% static 'profileapp/profile.css' %}" rel="stylesheet"/>
+{% endblock %}
+
+{% block content %}
+    <div class="alert_box"><p class="alert_p">Lorem ipsum dolor sit amet consectetur adipisicing elit. Repudiandae repellat </p></div>
+    <div class="auth-main">
+        <div class="profile">
+            <div class="uk-card uk-card-default">
+                <div class="uk-card-header">
+                    <div class="uk-grid-small uk-flex-middle" uk-grid>
+                        <div class="uk-width-auto">
+                            <img class="uk-border-circle" width="100" height="100" src="{{ user_model.avatar.url }}" alt="Avatar">
+                        </div>
+                        <div class="uk-width-expand">
+                            <h3 class="uk-card-title uk-margin-remove-bottom">{{ user_model.first_name }} {{ user_model.last_name}}</h3>
+                            <p class="uk-text-meta uk-margin-remove-top">{{ user_model.username }}</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="uk-card-body">
+                    <p>{{ user_model.about }}</p>
+                </div>
+                <div class="uk-card-footer">
+                    <a class="uk-button uk-button-default" uk-toggle="target: #modal-sections-my-friends" onclick="friends_get()">My Friends</a>
+                    <div id="modal-sections-my-friends" uk-modal>
+                        <div class="uk-modal-dialog">
+                            <button class="uk-modal-close-default" type="button" uk-close></button>
+                            <div class="uk-modal-header">
+                                <h2 class="uk-modal-title">My Friends</h2>
+                            </div>
+                            <div class="uk-modal-body">
+                                <ul class="uk-list uk-list-divider friends_my">
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <a class="uk-button uk-button-default" uk-toggle="target: #modal-sections-new-friends">Search Friends</a>
+                    <div id="modal-sections-new-friends" uk-modal>
+                        <div class="uk-modal-dialog">
+                            <button class="uk-modal-close-default" type="button" uk-close></button>
+                            <div class="uk-modal-header">
+                                <h2 class="uk-modal-title">Search Friends</h2>
+                            </div>
+                            <div class="uk-modal-body">
+                                <ul class="uk-list uk-list-divider friends_search">
+                                </ul>
+                            </div>
+                            <div class="uk-modal-footer">
+                                <input type="text" name="find_friend_input" id="" placeholder="username" class="uk-input">
+                            </div>
+                        </div>
+                    </div>
+                    {% if wanted_friends_cnt != 0 %}
+                    <a class="uk-button uk-button-default" uk-toggle="target: #modal-sections-requested-friends" onclick="friends_requested()">Requested Friends +{{ wanted_friends_cnt }}</a>
+                    <div id="modal-sections-requested-friends" uk-modal>
+                        <div class="uk-modal-dialog">
+                            <button class="uk-modal-close-default" type="button" uk-close></button>
+                            <div class="uk-modal-header">
+                                <h2 class="uk-modal-title">Requested Friends</h2>
+                            </div>
+                            <div class="uk-modal-body">
+                                <ul class="uk-list uk-list-divider friends_requested">
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        <hr>
+        <div class="new_post">
+            <form action="{% url 'profileapp:posts_create' %}" method="post" enctype="multipart/form-data" class="uk-grid new_post_form" uk-grid>
+                {% csrf_token %}
+                <div class="uk-width-1-1">
+                    {{ posts_create_form.text }}
+                </div>
+                <div class="uk-width-1-1" uk-form-custom>
+                    {{ posts_create_form.img }}
+                    <button class="uk-button uk-button-default post_inp" type="button" tabindex="-1">PHOTO</button>
+                </div>
+                <div class="uk-width-1-1">
+                    <button class="uk-button uk-button-default post_inp">Submit</button>
+                </div>
+            </form>
+        </div>
+        <hr>
+        <div class="posts">
+            {% for post in posts %}
+                <div class="post uk-card uk-card-default" id="post_{{ post.id }}">
+                    <div class="uk-card-header">
+                        <div class="uk-grid-small uk-flex-middle uk-grid" uk-grid="">
+                            <div class="uk-width-auto uk-first-column">
+                                <img class="uk-border-circle" width="70" height="70" src="{{ post.author.avatar.url }}" alt="Avatar">
+                            </div>
+                            <div class="uk-width-expand">
+                                <h3 class="uk-card-title uk-margin-remove-bottom">{{ post.author.first_name }} {{ post.author.last_name }}</h3>
+                                <p class="uk-text-meta uk-margin-remove-top">{{ post.author.username }}</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="uk-card-body">
+                        <p class="card_text">{{ post.text }}</p>
+                        <div class="post_width_corrector"></div>
+                        {% if post.img %}
+                            <hr>
+                            <div class="card_imgs">
+                                <img src="{{ post.img.url }}" alt="img" class="card_img">
+                            </div>
+                        {% endif %}
+                        <hr>
+                        <p class="post_created_at">{{ post.created_at }}</p>
+                    </div>
+                    <div class="uk-card-footer post_footer">
+                        <div class="likes{% if request.user in post.likes.all %} liked{% endif %}" onclick="post_like('{{ post.id }}')">
+                            <a uk-icon="icon: heart" class="icon_for_post like_icon"> </a><span class="likes_span"> {{ post.likes.count }}</span>
+                        </div>
+                        <div class="post_comments" onclick="post_comm('{{ post.id }}')" uk-toggle="target: #modal-sections-comments_{{ post.id }}">
+                            <a uk-icon="icon: comments" class="icon_for_post"> </a><span class="post_comments_span"> {{ post.comments.count }}</span>
+                            <div id="modal-sections-comments_{{ post.id }}" uk-modal>
+                                <div class="uk-modal-dialog">
+                                    <button class="uk-modal-close-default" type="button" uk-close></button>
+                                    <div class="uk-modal-header">
+                                        <h2 class="uk-modal-title">Comments</h2>
+                                    </div>
+                                    <div class="uk-modal-body">
+                                        <ul class="uk-list uk-list-divider comments_list" id="comments_list_{{ post.id }}">
+                                        </ul>
+                                    </div>
+                                    <!-- FORM -->
+                                </div>
+                            </div>
+                        </div>
+                        <div class="warning{% if request.user in post.warned.all %} warned{% endif %}" {% if request.user not in post.warned.all %} onclick="post_warn('{{ post.id }}')" {% endif %}>
+                            <a uk-icon="icon: warning" class="icon_for_post"> </a><span> Warn</span>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}
+
+{% block js %}
+    <script src="{% static 'profileapp/profile.js' %}"></script>
+{% endblock %}

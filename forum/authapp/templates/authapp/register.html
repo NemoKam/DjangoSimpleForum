@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block css %}
+    <link href="{% static 'authapp/register.css' %}" rel="stylesheet"/>
+{% endblock %}
+
+{% block content %}
+    <div class="auth-main">
+        {% if user.is_authenticated %}
+            logout
+        {% else %}
+        <form action="{% url 'authapp:register' %}" method="post" enctype="multipart/form-data" class="register_form" uk-grid>
+            {% csrf_token %}
+            <div class="uk-width-1-2@s">
+                {{ register_form.username }}
+            </div>    
+            <div class="uk-width-1-2@s">
+                {{ register_form.email }}
+            </div>
+            <div class="uk-width-1-2@s">
+                {{ register_form.first_name }}
+            </div>
+            <div class="uk-width-1-2@s">
+                {{ register_form.password1 }}
+            </div>
+            <div class="uk-width-1-2@s">
+                {{ register_form.last_name }}
+            </div>
+            <div class="uk-width-1-2@s">
+                {{ register_form.password2 }}
+            </div>
+            <div class="uk-width-1-1@s reg_submit_inp">
+                <button class="uk-button uk-button-default">Submit</button>
+            </div>
+        </form>
+        {% endif%}
+    </div>
+{% endblock %}
+
+{% block js %}
+    <script src="{% static 'authapp/register.js' %}"></script>
+{% endblock %}

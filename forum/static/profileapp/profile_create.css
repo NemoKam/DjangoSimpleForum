@@ -1,0 +1,31 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    background: rgb(231, 231, 231);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+}
+
+body {
+    width: 60%;
+    height: 60%;
+    background: rgba(151, 151, 151, 0.3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px;
+    border-radius: 10px;
+}
+
+.profile_reg_submit_inp, 
+.profile_reg_select_inp {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}

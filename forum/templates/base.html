@@ -1,0 +1,51 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>NemoKam - {{ page_title }}</title>
+    
+    <!-- favicon -->
+    <link rel="icon" type="image/x-icon" href="{% static 'favicon.png' %}">
+
+    <!-- UIkit CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/uikit@3.16.22/dist/css/uikit.min.css" />
+    
+    <!-- UIkit JS -->
+    <script src="https://cdn.jsdelivr.net/npm/uikit@3.16.22/dist/js/uikit.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/uikit@3.16.22/dist/js/uikit-icons.min.js"></script>
+
+    
+    {% block css %}
+    {% endblock %}
+
+</head>
+
+<body class="sb-nav-fixed">
+
+
+<!-- Page Content -->
+{% block content %}
+    {% for message in messages %}
+        <div class="alert
+                    alert-{% if message.level_tag == 'error' %}danger{% else %}{{ message.level_tag }}{% endif %}
+                    alert-dismissible fade show m-1"
+             role="alert">
+            {{ message }}
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+    {% endfor %}
+{% endblock %}
+
+{% block footer %}
+{% endblock %}
+
+{% block js %}
+{% endblock %}
+</body>
+</html>
