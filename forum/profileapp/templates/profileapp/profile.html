@@ -132,6 +132,7 @@
                                         </ul>
                                     </div>
                                     <!-- FORM -->
+                                    <div class="uk-card-footer comments_footer"></div>
                                 </div>
                             </div>
                         </div>
@@ -141,6 +142,18 @@
                     </div>
                 </div>
             {% endfor %}
+        </div>
+        <!-- Comment create form -->
+        <div class="comments_create_wrapper">
+            <form action="{% url 'profileapp:posts_comments_create' post_id=0 %}" method="post" class="comments_create_form" style="display: none;">
+                {% csrf_token %}
+                {{ comments_create_form.text }}    
+                <div uk-form-custom class="img_for_comment">
+                    {{ comments_create_form.img }}
+                    <a uk-icon="icon: image; ratio: 2" class="img_for_comment" tabindex="-1"></a>
+                </div>
+                <button uk-icon="icon: play; ratio: 2" class="icon_for_new_comment" type="submit"></button>
+            </form>
         </div>
     </div>
 {% endblock %}

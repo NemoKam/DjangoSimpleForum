@@ -122,10 +122,7 @@ def posts_create(request):
                 'img': new_post.img.url if new_post.img else '',
                 'created_at': new_post.created_at,
                 'post_id': new_post.id,
-                'likes': 0,
-                'comments_cnt': 0
             }
-            new_post.created_at
             return JsonResponse({'status': True, 'data': data})
         return JsonResponse({'status': False, 'error_message': 'Invalid form'})
     return JsonResponse({'status': False, 'error_message': 'Incorrect request method'})

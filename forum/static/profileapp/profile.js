@@ -182,15 +182,7 @@ document.querySelector('.new_post_form').addEventListener("submit", function(eve
                             <ul class="uk-list uk-list-divider comments_list" id="comments_list_` + data['post_id'] + `">
                             </ul>
                         </div>
-                        <form action="/profile/posts/` + data['post_id'] + `/comments/create/" method="post" enctype="multipart/form-data" class="uk-modal-footer comments_footer new_comment_form">
-                            <input type="hidden" name="csrfmiddlewaretoken" value="` + data['csrf_token'] + `">
-                            {{ comments_create_form.text }}
-                            <div uk-form-custom class="img_for_comment">
-                                {{ comments_create_form.img }}
-                                <a uk-icon="icon: image; ratio: 2" class="img_for_comment" tabindex="-1"></a>
-                            </div>
-                            <button uk-icon="icon: play; ratio: 2" class="icon_for_new_comment" type="submit"></button>
-                        </form>
+                        <div class="uk-card-footer comments_footer"></div>
                     </div>
                 </div>
             </div>
@@ -205,6 +197,7 @@ document.querySelector('.new_post_form').addEventListener("submit", function(eve
             alertfunc(data['error_message'])
         }
     });
+    document.querySelector('.new_post_form').reset()
 });
 
 function post_like(id) {
@@ -253,6 +246,13 @@ function post_warn(post_id) {
 
 
 function post_comm(post_id) {
+    new_create_wr = document.querySelector('.comments_create_wrapper').cloneNode(true)
+    new_create_form = new_create_wr.querySelector('form')
+    new_create_form.setAttribute('action', new_create_form.getAttribute('action').replace('0', String(post_id)))
+    new_create_form.removeAttribute('style')
+    comments = document.querySelector('#modal-sections-comments_' + post_id + ' > div > .comments_footer')
+    comments.innerHTML = new_create_wr.innerHTML
+    comment_listener(comments.querySelector('form'))
     fetch("posts/" + post_id + "/comments/").then(function(response) {
         return response.text()
     }).then(function(text) {
@@ -272,8 +272,8 @@ function post_comm(post_id) {
     });
 }
 
-document.querySelectorAll('.new_comment_form').forEach(new_comment_form => {
-    new_comment_form.addEventListener("submit", function(event) {
+function comment_listener(form) {
+    form.addEventListener("submit", function(event) {
         event.preventDefault();
         const formData = new FormData(this);
         fetch(this.action, {
@@ -294,8 +294,9 @@ document.querySelectorAll('.new_comment_form').forEach(new_comment_form => {
                 alertfunc(data['error_message'])
             }
         });
+        form.reset()
     });
-});
+}
 
 
 function comment_like(post_id, comment_id) {

@@ -235,10 +235,17 @@ a:hover {
     background: rgba(255, 0, 0, 0.5); 
 }
 
-.comments_footer {
+.comments_create_form {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    width: 100%;
+}
+
+.comments_footer {
+    display: flex;
+    align-items: center;
+    width: 90%;
 }
 
 .comments_inp {
