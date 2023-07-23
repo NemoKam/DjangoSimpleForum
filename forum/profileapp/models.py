@@ -32,7 +32,7 @@ class Post(models.Model):
     comments = models.ManyToManyField("Comment", blank=True, related_name='post_comments')
     warned = models.ManyToManyField("ProfileUser", blank=True, related_name='post_warned')
     created_at = models.DateTimeField(auto_now=True)
-
+    
 class Comment(models.Model):
     author = models.ForeignKey('ProfileUser', on_delete=models.CASCADE, related_name='comment_author')
     text = models.CharField(max_length=4000)
