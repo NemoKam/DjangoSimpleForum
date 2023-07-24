@@ -97,7 +97,7 @@ def friends_add(request, username):
             if maybe_in_friends.first():
                 return JsonResponse({'status': False, 'error_message': 'You already friends'})
             else:
-                if request.user.pre_friends.filter(id=maybe_friend[0].id).first():
+                if request.user.pre_friends.filter(id=maybe_friend[0].id).first(): # type: ignore
                     return JsonResponse({'status': False, 'error_message': 'You already send'})
                 else:
                     request.user.pre_friends.add(maybe_friend[0])
@@ -121,7 +121,7 @@ def posts_create(request):
                 'text': new_post.text,
                 'img': new_post.img.url if new_post.img else '',
                 'created_at': new_post.created_at,
-                'post_id': new_post.id,
+                'post_id': new_post.id, # type: ignore
             }
             return JsonResponse({'status': True, 'data': data})
         return JsonResponse({'status': False, 'error_message': 'Invalid form'})
