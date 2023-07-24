@@ -1,10 +1,12 @@
 from django.contrib import admin
 from profileapp.models import ProfileUser, Post, Comment
 
+from .filters import IDFilter, UsernameFilter
 
 class ProfileUserAdmin(admin.ModelAdmin):
     list_display = ['id', 'username', 'get_friends_cnt', 'last_login', 'is_active']
     ordering = ['id']
+    list_filter = [IDFilter, UsernameFilter, 'is_active']
 
     def get_friends_cnt(self, obj):
         return obj.friends.count()
@@ -15,6 +17,7 @@ class ProfileUserAdmin(admin.ModelAdmin):
 class PostAdmin(admin.ModelAdmin):
     list_display = ['id', 'author', 'get_likes_cnt', 'get_comments_cnt', 'get_warned_cnt', 'created_at']
     ordering = ['id']
+    list_filter = [IDFilter, UsernameFilter]
 
     def get_likes_cnt(self, obj):
         return obj.likes.count()
@@ -35,6 +38,7 @@ class PostAdmin(admin.ModelAdmin):
 class CommentAdmin(admin.ModelAdmin):
     list_display = ['id', 'author', 'get_likes_cnt', 'get_warned_cnt', 'created_at']
     ordering = ['id']
+    list_filter = [IDFilter, UsernameFilter]
 
     def get_likes_cnt(self, obj):
         return obj.likes.count()
