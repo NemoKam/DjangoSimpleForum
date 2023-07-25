@@ -32,6 +32,9 @@ class Post(models.Model):
     comments = models.ManyToManyField("Comment", blank=True, related_name='post_comments')
     warned = models.ManyToManyField("ProfileUser", blank=True, related_name='post_warned')
     created_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f"{self.text[:20]}..." if len(self.text)> 20 else self.text 
     
 class Comment(models.Model):
     author = models.ForeignKey('ProfileUser', on_delete=models.CASCADE, related_name='comment_author')
@@ -40,3 +43,6 @@ class Comment(models.Model):
     likes = models.ManyToManyField("ProfileUser", blank=True, related_name='comment_likes')
     warned = models.ManyToManyField("ProfileUser", blank=True, related_name='comment_warned')
     created_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f"{self.text[:20]}..." if len(self.text)> 20 else self.text
