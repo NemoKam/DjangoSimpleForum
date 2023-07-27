@@ -1,6 +1,7 @@
 from django.db import models
 # translation
 from django.utils.translation import gettext_lazy as _
+
 from django.contrib.auth.models import AbstractUser
 
 
@@ -39,7 +40,7 @@ class Post(models.Model):
 class Comment(models.Model):
     author = models.ForeignKey('ProfileUser', on_delete=models.CASCADE, related_name='comment_author')
     text = models.CharField(max_length=4000)
-    img = models.ImageField(upload_to='comments/avatars', blank=True, null=True)
+    img = models.ImageField(upload_to='comments/', blank=True, null=True)
     likes = models.ManyToManyField("ProfileUser", blank=True, related_name='comment_likes')
     warned = models.ManyToManyField("ProfileUser", blank=True, related_name='comment_warned')
     created_at = models.DateTimeField(auto_now=True)
