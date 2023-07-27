@@ -45,6 +45,9 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+
+    #apps middleware
+    'authapp.middleware.ip_statistic',
 ]
 
 ROOT_URLCONF = 'forum.urls'
