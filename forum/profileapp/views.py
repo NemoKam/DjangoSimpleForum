@@ -110,7 +110,7 @@ def posts_create(request):
     if request.method == 'POST':
         posts_create_form = PostCreateForm(request.POST, request.FILES)
         if posts_create_form.is_valid():
-            new_post = posts_create_form.save(request.user)
+            new_post = posts_create_form.save(request.user, None)
             data = {
                 'author': {
                     'username': new_post.author.username,
@@ -162,6 +162,33 @@ def posts_warn(request, post_id):
     else:
         return JsonResponse({'status': False, 'error_message': 'Invalid post id'})
     
+@login_required
+def posts_delete(request, post_id):
+    post = Post.objects.filter(id=post_id, author=request.user)
+    if post.first():
+        post[0].delete()
+        return JsonResponse({'status': True})
+    else:
+        return JsonResponse({'status': False})
+    
+@login_required
+def posts_edit(request, post_id):
+    post = Post.objects.filter(id=post_id, author=request.user)
+    if post.first():
+        post_edit_form = PostCreateForm(request.POST, request.FILES)
+        if post_edit_form.is_valid():
+            post = post_edit_form.save(request.user, post_id)
+            data = {
+                'post_id': post.id,
+                'text': post.text,
+                'img': post.img.url if post.img else ''
+            }
+            return JsonResponse({'status': True, 'data': data})
+        else:
+            return JsonResponse({'status': False})
+    else:
+        return JsonResponse({'status': False})
+
 @login_required
 def posts_comments(request, post_id):
     post = Post.objects.filter(id=post_id)
