@@ -93,7 +93,7 @@
             {% for post in posts %}
                 <div class="post uk-card uk-card-default" id="post_{{ post.id }}">
                     <div class="uk-card-header">
-                        <div class="uk-grid-small uk-flex-middle uk-grid" uk-grid="">
+                        <div class="uk-grid-small uk-flex-middle uk-grid post_header" uk-grid="">
                             <div class="uk-width-auto uk-first-column">
                                 <img class="uk-border-circle" width="70" height="70" src="{{ post.author.avatar.url }}" alt="Avatar">
                             </div>
@@ -101,17 +101,35 @@
                                 <h3 class="uk-card-title uk-margin-remove-bottom">{{ post.author.first_name }} {{ post.author.last_name }}</h3>
                                 <p class="uk-text-meta uk-margin-remove-top">{{ post.author.username }}</p>
                             </div>
+                            <div class="">
+                                <a uk-icon="icon: pencil" class="edit_post_icon" uk-toggle="target: #modal-sections-edit_{{ post.id }}" onclick="post_edit('{{post.id}}')"></a>
+                                <div id="modal-sections-edit_{{ post.id }}" uk-modal>
+                                    <div class="uk-modal-dialog modal_dialog_edit">
+                                        <button class="uk-modal-close-default uk-icon uk-close" type="button" uk-close="" aria-label="Close"><svg width="14" height="14" viewBox="0 0 14 14"><line fill="none" stroke="#000" stroke-width="1.1" x1="1" y1="1" x2="13" y2="13"></line><line fill="none" stroke="#000" stroke-width="1.1" x1="13" y1="1" x2="1" y2="13"></line></svg></button>
+                                        <!-- FORM -->
+                                        <div class="posts_edit_wrapper"></div>
+                                    </div>
+                                </div>
+                                <a uk-icon="icon: trash" class="delete_post_icon" uk-toggle="target: #modal-sections-delete_{{ post.id }}"></a>
+                                <div id="modal-sections-delete_{{ post.id }}" uk-modal>
+                                    <div class="uk-modal-dialog modal_dialog_trash">
+                                        <button class="uk-modal-close-default uk-icon uk-close" type="button" uk-close="" aria-label="Close"><svg width="14" height="14" viewBox="0 0 14 14"><line fill="none" stroke="#000" stroke-width="1.1" x1="1" y1="1" x2="13" y2="13"></line><line fill="none" stroke="#000" stroke-width="1.1" x1="13" y1="1" x2="1" y2="13"></line></svg></button>
+                                        <button class="uk-button uk-button-default uk-button-large uk-modal-close" >CANCEL</button>
+                                        <button class="uk-button uk-button-danger uk-button-large uk-modal-close" onclick="post_delete('{{ post.id }}')">DELETE</button>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <div class="uk-card-body">
                         <p class="card_text">{{ post.text }}</p>
                         <div class="post_width_corrector"></div>
-                        {% if post.img %}
+                        <div class="post_imgs" style="{% if not post.img %} display: none {% endif %}">
                             <hr>
                             <div class="card_imgs">
-                                <img src="{{ post.img.url }}" alt="img" class="card_img">
+                                <img src="{% if post.img %}{{ post.img.url }} {% endif %}" alt="img" class="card_img">
                             </div>
-                        {% endif %}
+                        </div>
                         <hr>
                         <p class="post_created_at">{{ post.created_at }}</p>
                     </div>
@@ -122,7 +140,7 @@
                         <div class="post_comments" onclick="post_comm('{{ post.id }}')" uk-toggle="target: #modal-sections-comments_{{ post.id }}">
                             <a uk-icon="icon: comments" class="icon_for_post"> </a><span class="post_comments_span"> {{ post.comments.count }}</span>
                             <div id="modal-sections-comments_{{ post.id }}" uk-modal>
-                                <div class="uk-modal-dialog">
+                                <div class="uk-modal-dialog modal_dialog_comments">
                                     <button class="uk-modal-close-default" type="button" uk-close></button>
                                     <div class="uk-modal-header">
                                         <h2 class="uk-modal-title">Comments</h2>
@@ -155,9 +173,26 @@
                 <button uk-icon="icon: play; ratio: 2" class="icon_for_new_comment" type="submit"></button>
             </form>
         </div>
+        <!-- Post edit form -->
+        <div class="posts_edit_wrapper_form">
+            <form action="{% url 'profileapp:posts_edit' post_id=0 %}" method="post" enctype="multipart/form-data" class="posts_edit_form" style="display: none;">
+                {% csrf_token %}
+                <div class="uk-width-1-1 post_edit_text">
+                    {{ posts_create_form.text }}
+                </div>
+                <div class="uk-width-1-1 post_edit_img" uk-form-custom>
+                    {{ posts_create_form.img }}
+                    <button class="uk-button uk-button-default post_inp" type="button" tabindex="-1">PHOTO</button>
+                    <img src="" alt="" class="post_edit_img_img">
+                </div>
+                <div class="uk-width-1-1">
+                    <button class="uk-button uk-button-default post_inp">Submit</button>
+                </div>
+            </form>
+        </div>
     </div>
 {% endblock %}
 
 {% block js %}
-    <script src="{% static 'profileapp/profile.js' %}"></script>
+    <script src="{% static 'profileapp/profile.js' %}" defer></script>
 {% endblock %}
