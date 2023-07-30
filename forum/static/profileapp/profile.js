@@ -377,3 +377,68 @@ function comments_filler(post_id, comments) {
     }); 
     post_comments.innerHTML = comments_html
 }
+
+
+function post_delete(post_id) {
+    fetch("posts/" + post_id + "/delete/").then(function(response) {
+        return response.text()
+    }).then(function(text) {
+        data = JSON.parse(text)
+        if (data['status']) {
+            document.querySelector('#post_' + post_id).remove()
+        } else {
+            alertfunc(data['error_message'])
+        }
+    });
+}
+
+function post_edit(post_id) {
+    post_edit_wr = document.querySelector('.posts_edit_wrapper_form').cloneNode(true)
+    post_edit_form = post_edit_wr.querySelector('form')
+    post_edit_form.setAttribute('action', post_edit_form.getAttribute('action').replace('0', String(post_id)))
+    post_edit_form.removeAttribute('style')
+    post_edit_form.querySelector('.post_edit_text > input').value = document.querySelector('#post_' + post_id).querySelector('.card_text').textContent
+    img = document.querySelector('#post_' + post_id).querySelector('.card_img')
+    if (img.getAttribute('src') != '') {
+        post_edit_form.querySelector('.post_edit_img_img').setAttribute('src', img.getAttribute('src'))
+    } else {
+        post_edit_form.querySelector('.post_edit_img_img').style = 'display: none'
+    }
+    posts = document.querySelector('#modal-sections-edit_' + post_id).querySelector('.modal_dialog_edit')
+    posts.querySelector('.posts_edit_wrapper').innerHTML = post_edit_wr.innerHTML
+    posts_edit_listener(posts.querySelector('form'))
+}
+
+function posts_edit_listener(form) {
+    form.addEventListener("submit", function(event) {
+        event.preventDefault();
+        const formData = new FormData(this);
+        fetch(this.action, {
+            method: this.method,
+            body: formData
+        }).then(function(response) {
+            return response.text()
+        }).then(function(text) {
+            data = JSON.parse(text)
+            if (data['status']) {
+                data = data['data']
+                post = document.querySelector("#post_" + data['post_id'])
+                post.querySelector('.card_text').innerHTML = data['text']
+                post_imgs = post.querySelector('.post_imgs') 
+                post_edit_form = document.querySelector('#modal-sections-edit_' + data['post_id']).querySelector('form')
+                if (data['img']) {
+                    post_imgs.querySelector('.card_img').setAttribute('src', data['img']) 
+                    post_imgs.style = 'display: block'
+                    post_edit_form.querySelector('.post_edit_img_img').setAttribute('src', img.getAttribute('src'))
+                    post_edit_form.querySelector('.post_edit_img_img').style = 'display: block'
+                } else {
+                    post_imgs.style = 'display: none'
+                    post_edit_form.querySelector('.post_edit_img_img').style = 'display: none'
+                }
+            } else {
+                alertfunc(data['error_message'])
+            }
+        });
+        form.reset()
+    });
+}
