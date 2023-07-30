@@ -61,13 +61,22 @@ class PostCreateForm(forms.ModelForm):
         model = Post
         fields = ('text', 'img')
 
-    def save(self, user):
-        if self.cleaned_data['img']:
-            new_post = Post.objects.create(author=user, text=self.cleaned_data['text'], img=self.cleaned_data['img'])
+    def save(self, user, post_id: None):
+        post = ''
+        if post_id:
+            post = Post.objects.get(id=post_id)
+            if self.cleaned_data['img']:
+                post.img = self.cleaned_data['img']
+            else:
+                post.img = ''
+            post.text = self.cleaned_data['text']
         else:
-            new_post = Post.objects.create(author=user, text=self.cleaned_data['text'])
-        new_post.save()
-        return new_post
+            if self.cleaned_data['img']:
+                post = Post.objects.create(author=user, text=self.cleaned_data['text'], img=self.cleaned_data['img'])
+            else:
+                post = Post.objects.create(author=user, text=self.cleaned_data['text'])
+        post.save()
+        return post
 
 class CommentCreateForm(forms.ModelForm):
 
