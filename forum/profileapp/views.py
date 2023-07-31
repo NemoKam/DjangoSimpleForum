@@ -27,6 +27,7 @@ def profile_create(request):
 def profile_edit(request):
     profile = ProfileUser.objects.get(forumuser_ptr_id=request.user.id)
     return HttpResponse('2')
+    # not finished
 
 @login_required
 def user_profile(request):
@@ -54,6 +55,7 @@ def user_other_profile(request, username):
         'friends': friends
     }
     return render(request, 'profileapp/profile.html', data)
+    # not finished
 
 @login_required
 def friends_search(request, username):
