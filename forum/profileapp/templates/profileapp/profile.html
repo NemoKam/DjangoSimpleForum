@@ -101,7 +101,7 @@
                                 <h3 class="uk-card-title uk-margin-remove-bottom">{{ post.author.first_name }} {{ post.author.last_name }}</h3>
                                 <p class="uk-text-meta uk-margin-remove-top">{{ post.author.username }}</p>
                             </div>
-                            <div class="">
+                            <div>
                                 <a uk-icon="icon: pencil" class="edit_post_icon" uk-toggle="target: #modal-sections-edit_{{ post.id }}" onclick="post_edit('{{post.id}}')"></a>
                                 <div id="modal-sections-edit_{{ post.id }}" uk-modal>
                                     <div class="uk-modal-dialog modal_dialog_edit">
