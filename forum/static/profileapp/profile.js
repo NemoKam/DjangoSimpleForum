@@ -122,6 +122,7 @@ function friends_requested() {
 }
 
 function alertfunc(text) {
+    console.log(text)
     alert_div.innerHTML = text
     alert_div.style = 'opacity: 1'
     setTimeout(function opacity() {alert_div.style = 'opacity: 0'}, 3000)
@@ -152,15 +153,38 @@ document.querySelector('.new_post_form').addEventListener("submit", function(eve
                     <h3 class="uk-card-title uk-margin-remove-bottom">` + data['author']['first_name'] + ` ` + data['author']['last_name'] + `</h3>
                     <p class="uk-text-meta uk-margin-remove-top">` + data['author']['username'] + `</p>
                 </div>
+                <div>
+                    <a uk-icon="icon: pencil" class="edit_post_icon" uk-toggle="target: #modal-sections-edit_` + data["post_id"] + `" onclick="post_edit('` + data["post_id"] + `')"></a>
+                    <div id="modal-sections-edit_` + data["post_id"] + `" uk-modal>
+                        <div class="uk-modal-dialog modal_dialog_edit">
+                            <button class="uk-modal-close-default uk-icon uk-close" type="button" uk-close="" aria-label="Close"><svg width="14" height="14" viewBox="0 0 14 14"><line fill="none" stroke="#000" stroke-width="1.1" x1="1" y1="1" x2="13" y2="13"></line><line fill="none" stroke="#000" stroke-width="1.1" x1="13" y1="1" x2="1" y2="13"></line></svg></button>
+                            <!-- FORM -->
+                            <div class="posts_edit_wrapper"></div>
+                        </div>
+                    </div>
+                    <a uk-icon="icon: trash" class="delete_post_icon" uk-toggle="target: #modal-sections-delete_` + data["post_id"] + `"></a>
+                    <div id="modal-sections-delete_` + data["post_id"] + `" uk-modal>
+                        <div class="uk-modal-dialog modal_dialog_trash">
+                            <button class="uk-modal-close-default uk-icon uk-close" type="button" uk-close="" aria-label="Close"><svg width="14" height="14" viewBox="0 0 14 14"><line fill="none" stroke="#000" stroke-width="1.1" x1="1" y1="1" x2="13" y2="13"></line><line fill="none" stroke="#000" stroke-width="1.1" x1="13" y1="1" x2="1" y2="13"></line></svg></button>
+                            <button class="uk-button uk-button-default uk-button-large uk-modal-close" >CANCEL</button>
+                            <button class="uk-button uk-button-danger uk-button-large uk-modal-close" onclick="post_delete('` + data["post_id"] + `')">DELETE</button>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
         <div class="uk-card-body">
             <p class="card_text">` + data['text'] + `</p>
-            <div class="post_width_corrector"></div>`
+            <div class="post_width_corrector"></div>
+            <div class="post_imgs" style="`
+            if (data['img'] == '') {
+                pre_new_post = pre_new_post + `display: none`
+            }
+            pre_new_post = pre_new_post + `">`
             if (data['img']) {
                 pre_new_post = pre_new_post + `<hr>
                 <div class="card_imgs">
-                <img src="` + data['img'] + `" alt="img" class="card_img"></div>`
+                <img src="` + data['img'] + `" alt="img" class="card_img"></div></div>`
             }
             pre_new_post = pre_new_post + `
             <hr>
